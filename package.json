@@ -1,0 +1,11 @@
+{
+  "name": "vk_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Pawday",
+  "license": "ISC"
+}
