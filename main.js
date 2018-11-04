@@ -10,11 +10,19 @@ const token = require('./configs/token.json').token;
 const conf = require('./configs/main.json');
 //.........................
 
+
+
+//create tables
 db.connect('databases/vk.db');
+
 try {db.run(fs.readFileSync('tables_SQL/users.sql','utf8'))} catch (error) {}
+try {db.run(fs.readFileSync('tables_SQL/ignoring.sql','utf8'))} catch (error) {}
+try {db.run(fs.readFileSync('tables_SQL/alllist.sql','utf8'))} catch (error) {}
+
+
 db.close();
 console.clear();
-
+//..........................
 
 //connect to LongPollServer
 var LP_RES = fun.VKReq(token,"messages.getLongPollServer").response;
@@ -66,7 +74,59 @@ while(true)
                 
                 const event = response.updates[i];
 
-                console.log(event);
+
+                if (event[0] == 4)
+                {
+                    //пришло сообщение
+
+
+                    //установка переменной from_id
+                    if(typeof(event[6].from) !== 'undefined')
+                    {
+                        var from_id = parseInt(event[6].from);
+                    } else 
+                    {
+                        var from_id = event[3];
+                    }
+
+                    
+
+                    db.connect('databases/vk.db')
+
+                    // Переменную user_data мы поучаем из своей базы, если в ней (в базе) есть этот пользователь, если нет то мы обращаемся к VK_API и записываем оттуда данные о пользователе
+                    var user_data = db.run("SELECT * FROM alllist WHERE id_user = ?;",[from_id])[0];
+
+                    if (typeof(user_data) == 'undefined') 
+                    {
+                        user_data = fun.VKReq(token,"users.get",{"user_ids":from_id}).response[0];
+                        db.run("INSERT INTO alllist (id_user, name, surname) VALUES (?,?,?);",[user_data.id,user_data.first_name,user_data.last_name]);
+                        user_data = db.run("SELECT * FROM alllist WHERE id_user = ?;",[from_id])[0];
+                    }
+
+
+                    //переменная db_ignorelst_user_data из игнорлиста
+                    var db_ignorelst_user_data = db.run("SELECT * FROM ignorelist WHERE id_user = ?;",[from_id])[0];
+                    if (typeof(db_ignorelst_user_data) == 'undefined') 
+                    {
+                        db.run("INSERT INTO ignorelist (id_user, name, surname) VALUES (?,?,?);",[user_data.id_user,user_data.name,user_data.surname]);
+                        db_ignorelst_user_data = db.run("SELECT * FROM ignorelist WHERE id_user = ?;",[from_id])[0];
+                    }
+
+                    // из таблици users
+                    var db_users_data = db.run("SELECT * FROM users WHERE id_user = ?;",[from_id])[0];
+
+                    console.log(db_users_data);
+                    
+
+                    db.close();
+
+                    
+                    
+
+                }
+
+
+
             }
 
         }
