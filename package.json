@@ -7,5 +7,8 @@
     "test": "start"
   },
   "author": "Pawday",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "sqlite-sync": "^0.3.8"
+  }
 }
