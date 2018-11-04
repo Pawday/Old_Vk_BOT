@@ -53,9 +53,24 @@ while(true)
     } else 
     {
         //пришо событие (но оно может быть пустым)
+        
 
-        console.log(response);
+        
+        if (response.updates.length !== 0)
+        {
+            //тут событие не пустое (и их может быть много)
+
+            for (let i = 0; i < response.updates.length; i++) 
+            {
+                //тут можно разобрать каждое событие
+                
+                const event = response.updates[i];
+
+                console.log(event);
+            }
+
+        }
 
         ts = response.ts;
     }
-} 
+}
