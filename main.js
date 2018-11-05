@@ -74,6 +74,8 @@ while(true)
                 
                 const event = response.updates[i];
 
+                console.log(event);
+
 
                 if (event[0] == 4)
                 {
@@ -114,9 +116,6 @@ while(true)
 
                     // из таблици users
                     var db_users_data = db.run("SELECT * FROM users WHERE id_user = ?;",[from_id])[0];
-
-                    console.log(db_users_data);
-                    
 
                     db.close();
 
