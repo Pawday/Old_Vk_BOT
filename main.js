@@ -11,6 +11,11 @@ const conf = require('./configs/main.json');
 //.........................
 
 
+//DB dir create
+try{fs.mkdirSync("databases")}catch(e){console.log("Ошибка в создании databases")}
+//...................
+
+
 
 //create tables
 db.connect('databases/vk.db');
