@@ -12,7 +12,7 @@ const conf = require('./configs/main.json');
 
 
 //DB dir create
-try{fs.mkdirSync("databases")}catch(e){console.log("Ошибка в создании databases")}
+try{fs.mkdirSync("databases")}catch(error){}
 //...................
 
 
@@ -43,7 +43,7 @@ while(true)
 
     if( typeof(response.failed) != 'undefined')
     {
-        //пришлло failed от LongPoll
+        //failed from LongPoll
         switch(response.failed)
         {
             case 1:
@@ -65,17 +65,17 @@ while(true)
         }
     } else 
     {
-        //пришо событие (но оно может быть пустым)
+
         
 
         
         if (response.updates.length !== 0)
         {
-            //тут событие не пустое (и их может быть много)
+            //null event 
 
             for (let i = 0; i < response.updates.length; i++) 
             {
-                //тут можно разобрать каждое событие
+                //every not null event
                 
                 const event = response.updates[i];
 
@@ -84,10 +84,10 @@ while(true)
 
                 if (event[0] == 4)
                 {
-                    //пришло сообщение
+                    //massages
 
 
-                    //установка переменной from_id
+                    //var from_id
                     if(typeof(event[6].from) !== 'undefined')
                     {
                         var from_id = parseInt(event[6].from);
@@ -100,7 +100,7 @@ while(true)
 
                     db.connect('databases/vk.db')
 
-                    // Переменную user_data мы поучаем из своей базы, если в ней (в базе) есть этот пользователь, если нет то мы обращаемся к VK_API и записываем оттуда данные о пользователе
+                    
                     var user_data = db.run("SELECT * FROM alllist WHERE id_user = ?;",[from_id])[0];
 
                     if (typeof(user_data) == 'undefined') 
@@ -111,7 +111,7 @@ while(true)
                     }
 
 
-                    //переменная db_ignorelst_user_data из игнорлиста
+                    //var db_ignorelst_user_data from ignorelist
                     var db_ignorelst_user_data = db.run("SELECT * FROM ignorelist WHERE id_user = ?;",[from_id])[0];
                     if (typeof(db_ignorelst_user_data) == 'undefined') 
                     {
@@ -119,7 +119,7 @@ while(true)
                         db_ignorelst_user_data = db.run("SELECT * FROM ignorelist WHERE id_user = ?;",[from_id])[0];
                     }
 
-                    // из таблици users
+                    // from tables users
                     var db_users_data = db.run("SELECT * FROM users WHERE id_user = ?;",[from_id])[0];
 
                     db.close();
