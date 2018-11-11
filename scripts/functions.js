@@ -33,43 +33,12 @@ module.exports.VKReqGET = function(token,method,params = {})
     return JSON.parse(resp.getBody('utf8'));
 };
 
-module.exports.helpfunk = function(mas,event)
-{
-    switch(mas)
-    {
-        case "help":
-        case "Help":
-        case "хелп":
-        case "Хелп":
-        case "помощь":
-        case "Помощь":
-        case "помощ":
-        case "Помощ":
-
-        //  "" + "\n" +
-
-        var mass = 
-        "------------- " + conf.Bot_Display_name +  " -------------" + "\n" +
-        "[&#10002;] Рег" + "\n";
-
-
-        this.VKReq(token,'messages.send',
-        {
-            
-            "peer_id":event[3],
-
-            "message": mass
-        });
-
-        break;
-    }
-}
 
 module.exports.Currency_tail = function(num)
 {
     var tail = num % 100;
 
-    if(num > 10 && num < 20)
+    if(tail > 10 && tail < 20)
     {
         return conf.Economics.Currency.Cases.Plural.Genitive;
     } else 
@@ -91,5 +60,16 @@ module.exports.Currency_tail = function(num)
             case 0:
                 return conf.Economics.Currency.Cases.Plural.Genitive
         }
+    }
+}
+
+module.exports.cascade_table = function(rang)
+{
+    switch(rang)
+    {
+        case "User":
+        return 1;
+        case "Vip":
+        return 2;
     }
 }

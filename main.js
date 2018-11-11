@@ -4,6 +4,7 @@ const fs    = require('fs');
 const req   = require('sync-request'); 
 
 const fun = require('./scripts/functions');
+const echo_fun = require('./scripts/echo_functions');
 
 const token = require('./configs/token.json').token;
 
@@ -141,41 +142,144 @@ while(true)
                             if(typeof(db_users_data) == 'undefined')
                             {
                                 //user not registered
-                                fun.helpfunk(mass_arr[1],event); 
+                                var bool = echo_fun.help(mass_arr,event);
 
-                                switch(mass_arr[1])
+                                if (!bool) 
                                 {
-                                    case "рег":
-                                    case "Рег":
-                                    case "reg":
-                                    case "Reg":
-                                    case "регистрация":
-                                    case "Регистрация":
-                                    case "registration":
-                                    case "Registration":
-
-                                    db.connect('databases/vk.db');
-
-                                    db.run("INSERT INTO users (id_user, name, surname, balanсe) VALUES (?,?,?,?);",[user_data.id_user,user_data.name,user_data.surname,conf.Economics.Beginning_Balance]);
-
-                                    var mass = "[&#9989;] Вы успешно зарегистрировались! \n [&#128179;] У вас на счету " + conf.Economics.Beginning_Balance + " " + fun.Currency_tail(conf.Economics.Beginning_Balance) + '.';
-                                    db.close();
-
-                                    fun.VKReq(token,'messages.send',
+                                    switch(mass_arr[1])
                                     {
-                                        "forward_messages":event[1],
-                                        "peer_id":event[3],
+                                        case "рег":
+                                        case "Рег":
+                                        case "reg":
+                                        case "Reg":
+                                        case "регистрация":
+                                        case "Регистрация":
+                                        case "registration":
+                                        case "Registration":
 
-                                        "message": mass
-                                    });
+                                        db.connect('databases/vk.db');
+
+                                        db.run("INSERT INTO users (id_user, name, surname, balanсe) VALUES (?,?,?,?);",[user_data.id_user,user_data.name,user_data.surname,conf.Economics.Beginning_Balance]);
+
+                                        var mass = "[&#9989;] Вы успешно зарегистрировались! \n [&#128179;] У вас на счету " + conf.Economics.Beginning_Balance + " " + fun.Currency_tail(conf.Economics.Beginning_Balance) + '.';
+                                        db.close();
+
+                                        fun.VKReq(token,'messages.send',
+                                        {
+                                            "forward_messages":event[1],
+                                            "peer_id":event[3],
+
+                                            "message": mass
+                                        });
 
 
-                                    
-                                    break;
+                                        
+                                        break;
+
+                                        default:
+
+                                        var mass = "[&#9940;] Вы не зарегистрированны!"
+
+                                        fun.VKReq(token,'messages.send',
+                                        {
+                                            "forward_messages":event[1],
+                                            "peer_id":event[3],
+
+                                            "message": mass
+                                        });
+
+                                        break;
+                                    }
                                 }
+
+                                
                             } else 
                             {
                                 //user registered
+                                if (db_users_data.banned != 1)
+                                {
+                                    //user not banned
+
+
+                                    //Cascade privilege table
+
+                                    var rang = fun.cascade_table(db_users_data.rang);
+
+                                    if (rang >= 1)  //user
+                                    {
+                                        switch(mass_arr[1])
+                                        {
+                                            case "рег":
+                                            case "Рег":
+                                            case "reg":
+                                            case "Reg":
+                                            case "регистрация":
+                                            case "Регистрация":
+                                            case "registration":
+                                            case "Registration":
+
+                                            var mass = 
+                                            "[&#9940;] Вы уже зарегистрированны!"
+
+                                            fun.VKReq(token,'messages.send',
+                                            {
+                                                "forward_messages":event[1],
+                                                "peer_id":event[3],
+
+                                                "message": mass
+                                            });
+
+
+                                            
+                                            break;
+
+                                            case "ранг":
+                                            case "Ранг":
+                                            case "rang":
+                                            case "Rang":
+
+                                            var mass = "[&#9824;] Ваш ранг: " + db_users_data.rang + ".";
+
+                                            fun.VKReq(token,'messages.send',
+                                            {
+                                                "forward_messages":event[1],
+                                                "peer_id":event[3],
+
+                                                "message": mass
+                                            });
+
+                                            break;
+
+                                            case "баланс":
+                                            case "Баланс":
+
+                                            
+                                            
+                                            console.log(db_users_data);
+
+                                            var mass = "[&#128179;] Ваш баланс составляет " + db_users_data.balanсe + " " + fun.Currency_tail(db_users_data.balanсe) + ".";
+
+                                            fun.VKReq(token,'messages.send',
+                                            {
+                                                "forward_messages":event[1],
+                                                "peer_id":event[3],
+
+                                                "message": mass
+                                            });
+
+
+                                            break;
+
+                                        }
+                                    }
+                                    if (rang >= 2)  //Vip
+                                    {
+                                        switch(mass_arr[1])
+                                        {
+
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
