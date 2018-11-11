@@ -255,7 +255,6 @@ while(true)
 
                                             
                                             
-                                            console.log(db_users_data);
 
                                             var mass = "[&#128179;] Ваш баланс составляет " + db_users_data.balanсe + " " + fun.Currency_tail(db_users_data.balanсe) + ".";
 
