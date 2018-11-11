@@ -1,3 +1,33 @@
 {
-    "LP_Wait_Time":25
+    "LP_Wait_Time": 25,
+    "Bot_Display_name" : "Троцкий Бот",
+    "Bots_Names" : ["Бот" , "бот"],
+    "Economics":
+    {
+        "Beginning_Balance" : 3123,
+        "Currency":
+        {
+            "Cases":
+            {
+                "Singular":
+                {
+                    "Nominative" :      "рубль",
+                    "Genitive" :        "рубля",
+                    "Dative" :          "рублю",
+                    "Accusative" :      "рубль",
+                    "Ablative":         "рублём",
+                    "Prepositional":    "рубле"
+                },
+                "Plural":
+                {
+                    "Nominative" :      "рубли",
+                    "Genitive" :        "рублей",
+                    "Dative" :          "рублям",
+                    "Accusative" :      "рубли",
+                    "Ablative":         "рублями",
+                    "Prepositional":    "рублях"
+                }
+            }
+        }
+    }
 }

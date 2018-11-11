@@ -24,6 +24,7 @@ try {db.run(fs.readFileSync('tables_SQL/users.sql','utf8'))} catch (error) {}
 try {db.run(fs.readFileSync('tables_SQL/ignoring.sql','utf8'))} catch (error) {}
 try {db.run(fs.readFileSync('tables_SQL/alllist.sql','utf8'))} catch (error) {}
 
+db.run("SELECT 1;")
 
 db.close();
 console.clear();
@@ -77,7 +78,7 @@ while(true)
             {
                 //every not null event
                 
-                const event = response.updates[i];
+                var event = response.updates[i];
 
                 console.log(event);
 
@@ -125,16 +126,62 @@ while(true)
                     db.close();
 
                     
-                    
 
+
+                    var mass_arr = event[5].split(" ");
+
+                    if(conf.Bots_Names.indexOf(mass_arr[0]) != -1)
+                    {
+                        //Called bot
+
+                        if(db_ignorelst_user_data.ignoring != 1) 
+                        {
+                            //user not ignoring
+
+                            if(typeof(db_users_data) == 'undefined')
+                            {
+                                //user not registered
+                                fun.helpfunk(mass_arr[1],event); 
+
+                                switch(mass_arr[1])
+                                {
+                                    case "рег":
+                                    case "Рег":
+                                    case "reg":
+                                    case "Reg":
+                                    case "регистрация":
+                                    case "Регистрация":
+                                    case "registration":
+                                    case "Registration":
+
+                                    db.connect('databases/vk.db');
+
+                                    db.run("INSERT INTO users (id_user, name, surname, balanсe) VALUES (?,?,?,?);",[user_data.id_user,user_data.name,user_data.surname,conf.Economics.Beginning_Balance]);
+
+                                    var mass = "[&#9989;] Вы успешно зарегистрировались! \n [&#128179;] У вас на счету " + conf.Economics.Beginning_Balance + " " + fun.Currency_tail(conf.Economics.Beginning_Balance) + '.';
+                                    db.close();
+
+                                    fun.VKReq(token,'messages.send',
+                                    {
+                                        "forward_messages":event[1],
+                                        "peer_id":event[3],
+
+                                        "message": mass
+                                    });
+
+
+                                    
+                                    break;
+                                }
+                            } else 
+                            {
+                                //user registered
+                            }
+                        }
+                    }
                 }
-
-
-
             }
-
         }
-
         ts = response.ts;
     }
 }
