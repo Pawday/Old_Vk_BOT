@@ -207,68 +207,72 @@ while(true)
 
                                     if (rang >= 1)  //user
                                     {
-                                        switch(mass_arr[1])
+                                        bool = echo_fun.help(mass_arr,event);
+                                        if (!bool) 
                                         {
-                                            case "рег":
-                                            case "Рег":
-                                            case "reg":
-                                            case "Reg":
-                                            case "регистрация":
-                                            case "Регистрация":
-                                            case "registration":
-                                            case "Registration":
-
-                                            var mass = 
-                                            "[&#9940;] Вы уже зарегистрированны!"
-
-                                            fun.VKReq(token,'messages.send',
+                                            switch(mass_arr[1])
                                             {
-                                                "forward_messages":event[1],
-                                                "peer_id":event[3],
+                                                case "рег":
+                                                case "Рег":
+                                                case "reg":
+                                                case "Reg":
+                                                case "регистрация":
+                                                case "Регистрация":
+                                                case "registration":
+                                                case "Registration":
 
-                                                "message": mass
-                                            });
+                                                var mass = 
+                                                "[&#9940;] Вы уже зарегистрированны!"
 
+                                                fun.VKReq(token,'messages.send',
+                                                {
+                                                    "forward_messages":event[1],
+                                                    "peer_id":event[3],
 
-                                            
-                                            break;
-
-                                            case "ранг":
-                                            case "Ранг":
-                                            case "rang":
-                                            case "Rang":
-
-                                            var mass = "[&#9824;] Ваш ранг: " + db_users_data.rang + ".";
-
-                                            fun.VKReq(token,'messages.send',
-                                            {
-                                                "forward_messages":event[1],
-                                                "peer_id":event[3],
-
-                                                "message": mass
-                                            });
-
-                                            break;
-
-                                            case "баланс":
-                                            case "Баланс":
-
-                                            
-                                            
-
-                                            var mass = "[&#128179;] Ваш баланс составляет " + db_users_data.balanсe + " " + fun.Currency_tail(db_users_data.balanсe) + ".";
-
-                                            fun.VKReq(token,'messages.send',
-                                            {
-                                                "forward_messages":event[1],
-                                                "peer_id":event[3],
-
-                                                "message": mass
-                                            });
+                                                    "message": mass
+                                                });
 
 
-                                            break;
+                                                
+                                                break;
 
+                                                case "ранг":
+                                                case "Ранг":
+                                                case "rang":
+                                                case "Rang":
+
+                                                var mass = "[&#9824;] Ваш ранг: " + db_users_data.rang + ".";
+
+                                                fun.VKReq(token,'messages.send',
+                                                {
+                                                    "forward_messages":event[1],
+                                                    "peer_id":event[3],
+
+                                                    "message": mass
+                                                });
+
+                                                break;
+
+                                                case "баланс":
+                                                case "Баланс":
+
+                                                
+                                                
+
+                                                var mass = "[&#128179;] Ваш баланс составляет " + db_users_data.balanсe + " " + fun.Currency_tail(db_users_data.balanсe) + ".";
+
+                                                fun.VKReq(token,'messages.send',
+                                                {
+                                                    "forward_messages":event[1],
+                                                    "peer_id":event[3],
+
+                                                    "message": mass
+                                                });
+
+
+                                                break;
+
+                                            }
                                         }
                                     }
                                     if (rang >= 2)  //Vip
