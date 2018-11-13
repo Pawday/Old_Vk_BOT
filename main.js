@@ -24,6 +24,8 @@ db.connect('databases/vk.db');
 try {db.run(fs.readFileSync('tables_SQL/users.sql','utf8'))} catch (error) {}
 try {db.run(fs.readFileSync('tables_SQL/ignoring.sql','utf8'))} catch (error) {}
 try {db.run(fs.readFileSync('tables_SQL/alllist.sql','utf8'))} catch (error) {}
+try {db.run(fs.readFileSync('tables_SQL/education.sql','utf8'))} catch (error) {}
+
 
 db.run("SELECT 1;")
 
@@ -100,7 +102,9 @@ while(true)
 
                     
 
-                    db.connect('databases/vk.db')
+                    db.connect('databases/vk.db');
+
+                    var education_db_data =  db.run("SELECT * FROM education WHERE id_user = ?;",[from_id])[0];
 
                     
                     var user_data = db.run("SELECT * FROM alllist WHERE id_user = ?;",[from_id])[0];
@@ -268,6 +272,114 @@ while(true)
 
                                                     "message": mass
                                                 });
+
+
+                                                break;
+
+                                                case "обучение":
+                                                case "Обучение":
+                                                case "учеба":
+                                                case "Учеба":
+                                                case "учёба":
+                                                case "Учёба":
+                                                case "study":
+                                                case "Study":
+
+                                                if(typeof (mass_arr[2]) == "undefined")
+                                                {
+                                                    var mass = "[&#10071;] Для того чтоб узнать о системе образования, наберите: \"" + conf.Bots_Names[0] + " обучение помощь\".";
+                                                    fun.VKReq(token,'messages.send',
+                                                    {
+                                                        "forward_messages":event[1],
+                                                        "peer_id":event[3],
+
+                                                        "message": mass
+                                                    });
+                                                } else 
+                                                {
+                                                    switch(mass_arr[2])
+                                                    {
+                                                        case "помощ":
+                                                        case "Помощ":
+                                                        case "помощь":
+                                                        case "Помощь":
+                                                        case "help":
+                                                        case "Help":
+
+                                                        var mass = 
+                                                        "[&#128526;] Не скажу...";
+                                                        fun.VKReq(token,'messages.send',
+                                                        {
+                                                            "peer_id":event[3],
+
+                                                            "message": mass
+                                                        });
+
+                                                        break;
+
+                                                        case "рег":
+                                                        case "Рег":
+                                                        case "reg":
+                                                        case "Reg":
+                                                        case "регистрация":
+                                                        case "Регистрация":
+                                                        case "registration":
+                                                        case "Registration":
+
+                                                        if(typeof(education_db_data) == "undefined")
+                                                        {
+                                                            db.connect('databases/vk.db');
+
+                                                            db.run("INSERT INTO education (id_user, name, surname, begin_course) VALUES (?,?,?,?);",[user_data.id_user,user_data.name,user_data.surname,fun.now()]);
+
+                                                            db.close();
+
+                                                            var mass = "[&#9989;] Вы успешно зарегистрировались в системе образования!";
+                                                            fun.VKReq(token,'messages.send',
+                                                            {
+                                                                "forward_messages":event[1],
+                                                                "peer_id":event[3],
+
+                                                                "message": mass
+                                                            });
+                                                        } else 
+                                                        {
+                                                            var mass = 
+                                                            "[&#9940;] Вы уже зарегистрированны в системе образования!"
+
+                                                            fun.VKReq(token,'messages.send',
+                                                            {
+                                                                "forward_messages":event[1],
+                                                                "peer_id":event[3],
+
+                                                                "message": mass
+                                                            });
+                                                        }
+
+
+                                                        break;
+
+                                                        default:
+
+                                                        if(typeof(education_db_data) == "undefined")
+                                                        {
+                                                            var mass = 
+                                                            "[&#9940;] Вы не можете воспользоватся системой образования, так как вы не зарегистрированны в ней!\n\n" + 
+                                                            "[&#10071;] Для того чтоб узнать о системе образования, наберите: \"" + conf.Bots_Names[0] + " обучение помощь\".";
+
+                                                            fun.VKReq(token,'messages.send',
+                                                            {
+                                                                "forward_messages":event[1],
+                                                                "peer_id":event[3],
+        
+                                                                "message": mass
+                                                            });
+                                                        }
+
+                                                        break;
+                                                    }
+                                                }
+
 
 
                                                 break;

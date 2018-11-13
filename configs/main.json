@@ -2,6 +2,7 @@
     "LP_Wait_Time": 25,
     "Bot_Display_name" : "Троцкий Бот",
     "Bots_Names" : ["Бот" , "бот"],
+    "Day_length":5,
     "Economics":
     {
         "Beginning_Balance" : 3123,

@@ -73,3 +73,8 @@ module.exports.cascade_table = function(rang)
         return 2;
     }
 }
+
+module.exports.now = function()
+{
+    return Math.floor(Date.now() / 1000);
+}
