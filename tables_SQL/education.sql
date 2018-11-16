@@ -11,8 +11,9 @@ create table education
   college_course            INTEGER(2),
   university_course         INTEGER(2),
   count_of_lessons_now      INTEGER(8),
-  count_of_classes_attended INTEGER(8),
-  begin_course              INTEGER
+  count_of_classes_attended INTEGER(8) default 0,
+  begin_course              INTEGER,
+  last_lesson               INTEGER DEFAULT 0
 
 );
 

@@ -89,7 +89,7 @@ module.exports.random = function (min, max)
 
 
 
-module.exports.timeparse = function(sec) 
+module.exports.timeparse = function(sec)
 {
 
     var tail;
@@ -163,7 +163,7 @@ module.exports.timeparse = function(sec)
             case 8:
             case 9:
             case 0:
-                robj.h.string = " часов";
+                robj.h.string = "часов";
             break;
         }
     }
@@ -225,6 +225,36 @@ module.exports.timeparse = function(sec)
             break;
         }
     }
-    console.log(robj);
     return robj;
 };
+
+
+module.exports.learning_points_tail = function(num)
+{
+    var tail = num % 100;
+    if(tail > 10 && tail < 20)
+    {
+        return "баллов";
+    } else 
+    {
+        tail = tail % 10;
+        switch(tail)
+        {
+            case 1:
+                return "балл";
+            
+            case 2:
+            case 3:
+            case 4:
+                return "балла";
+            
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 0:
+                return "баллов";
+        }
+    }
+}

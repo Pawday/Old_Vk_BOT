@@ -8,7 +8,7 @@ const echo_fun = require('./scripts/echo_functions');
 
 const token = require('./configs/token.json').token;
 
-const conf = require('./configs/main.json');
+var conf = require('./configs/main.json');
 //.........................
 
 
@@ -374,6 +374,191 @@ while(true)
         
                                                                 "message": mass
                                                             });
+                                                        } else 
+                                                        {
+                                                            //user registered and req other command
+                                                            switch(mass_arr[2]) 
+                                                            {
+                                                                case "место":
+                                                                case "Mесто":
+                                                                case "plaсe":
+                                                                case "Plaсe":
+                                                                case "заведение":
+                                                                case "Заведение":
+                                                                case "учреждение":
+                                                                case "Учреждение":
+                                                                switch(education_db_data.education_place)
+                                                                {
+                                                                    case "school":
+                                                                    var mass = "[&#128216;] Вы учитесь в школе.";
+
+                                                                    fun.VKReq(token,'messages.send',
+                                                                    {
+                                                                        "forward_messages":event[1],
+                                                                        "peer_id":event[3],
+                
+                                                                        "message": mass
+                                                                    });
+
+
+                                                                    break;
+
+                                                                    case "сollege":
+                                                                    var mass = "[&#128215;] Вы учитесь в колледже.";
+
+                                                                    fun.VKReq(token,'messages.send',
+                                                                    {
+                                                                        "forward_messages":event[1],
+                                                                        "peer_id":event[3],
+                
+                                                                        "message": mass
+                                                                    });
+                                                                    break;
+
+                                                                    case "university":
+                                                                    var mass = "[&#128213;] Вы учитесь в университете.";
+
+                                                                    fun.VKReq(token,'messages.send',
+                                                                    {
+                                                                        "forward_messages":event[1],
+                                                                        "peer_id":event[3],
+                
+                                                                        "message": mass
+                                                                    });
+                                                                    break;
+
+                                                                    case "end":
+
+                                                                    var mass = "[&#10071;] Вы завершили своё обучение!";
+
+                                                                    fun.VKReq(token,'messages.send',
+                                                                    {
+                                                                        "forward_messages":event[1],
+                                                                        "peer_id":event[3],
+                
+                                                                        "message": mass
+                                                                    });
+
+                                                                    break;
+
+                                                                    
+                                                                    default:
+
+                                                                    var mass = "[&#10067;] Вы учитесь хрен пойми где.";
+
+                                                                    fun.VKReq(token,'messages.send',
+                                                                    {
+                                                                        "forward_messages":event[1],
+                                                                        "peer_id":event[3],
+                
+                                                                        "message": mass
+                                                                    });
+
+                                                                    break;
+
+                                                                    
+                                                                }
+                                                                break;
+
+                                                                case "школа":
+                                                                case "Школа":
+                                                                case "school":
+                                                                case "School":
+                                                                case "шк":
+
+                                                                if (education_db_data.education_place != "school") 
+                                                                {
+
+                                                                    switch(education_db_data.education_place)
+                                                                    {
+                                                                        case "school":
+                                                                        var reason = "учитесь в школе";
+                                                                        break;
+                                                                        case "сollege":
+                                                                        var reason = "учитесь в колледже";
+                                                                        break;
+                                                                        case "university":
+                                                                        var reason = "учитесь в университете";
+                                                                        break;
+                                                                        case "end":
+                                                                        var reason = "завершили своё обучение"
+                                                                        break;
+                                                                        default:
+                                                                        var reason = "учитесь хрен пойми где";
+                                                                        break;
+                                                                    }
+
+                                                                    var mass = "[&#9940;] Вы не можете посетить занятие в школе, так как вы " + reason + ".";
+
+                                                                    fun.VKReq(token,'messages.send',
+                                                                    {
+                                                                        "forward_messages":event[1],
+                                                                        "peer_id":event[3],
+                
+                                                                        "message": mass
+                                                                    });
+                                                                } else 
+                                                                {
+                                                                    if((education_db_data.last_lesson + conf.Day_length * 60) > fun.now())
+                                                                    {
+                                                                        var wait_time = fun.timeparse((education_db_data.last_lesson + conf.Day_length * 60) - fun.now());
+                                                                        var str_tail = "";
+                                                                        if (wait_time.d.value > 0)
+                                                                        {
+                                                                            str_tail += " " + wait_time.d.value + " " + wait_time.d.string;
+                                                                        }
+                                                                        if (wait_time.h.value > 0)
+                                                                        {
+                                                                            str_tail += " " + wait_time.h.value + " " + wait_time.h.string;
+                                                                        }
+                                                                        if (wait_time.m.value > 0)
+                                                                        {
+                                                                            str_tail += " " + wait_time.m.value + " " + wait_time.m.string;
+                                                                        }
+                                                                        if (wait_time.s.value > 0)
+                                                                        {
+                                                                            str_tail += " " + wait_time.s.value + " " + wait_time.s.string;
+                                                                        }
+                                                                        var mass = "[&#9940;] Вы не можете пойти в школу прямо сейчас.\n" + 
+                                                                        "[&#8987;] До следующего занятия осталось:\n" + str_tail + ".";
+
+                                                                        fun.VKReq(token,'messages.send',
+                                                                        {
+                                                                            "forward_messages":event[1],
+                                                                            "peer_id":event[3],
+                    
+                                                                            "message": mass
+                                                                        });
+                                                                    } else 
+                                                                    {
+                                                                        var earnings = fun.random(conf.Education.School.Earned_point[0],conf.Education.School.Earned_point[1]);
+                                                                        var las_lesson = education_db_data.begin_course + conf.Day_length * 60 * Math.floor((fun.now() - education_db_data.begin_course) / (conf.Day_length * 60));
+                                                                        var count_lesson = Math.floor((fun.now() - education_db_data.begin_course) / (conf.Day_length * 60)) + 1;
+
+                                                                        db.connect('databases/vk.db');
+                                                                        db.run("UPDATE education SET study_level = ? WHERE id_user = ?;",[education_db_data.study_level + earnings,education_db_data.id_user]);
+                                                                        db.run("UPDATE education SET last_lesson = ? WHERE id_user = ?;",[las_lesson,education_db_data.id_user]);
+                                                                        db.run("UPDATE education SET count_of_classes_attended = ? WHERE id_user = ?;",[education_db_data.count_of_classes_attended + 1,education_db_data.id_user]);
+                                                                        db.run("UPDATE education SET count_of_lessons_now = ? WHERE id_user = ?;",[count_lesson,education_db_data.id_user]);
+                                                                        db.close();
+
+                                                                        var mass = "[&#10004;] Вы успешно проучились в школе!\n" +
+                                                                        "[&#128218;] Вы заработали " + earnings + " " + fun.learning_points_tail(earnings) + " обучения";
+                                                                        fun.VKReq(token,'messages.send',
+                                                                        {
+                                                                            "forward_messages":event[1],
+                                                                            "peer_id":event[3],
+                    
+                                                                            "message": mass
+                                                                        });
+                                                                    }
+                                                                    
+                                                                }
+                                                                
+                                                                
+                                                                break;
+
+                                                            }
                                                         }
 
                                                         break;
