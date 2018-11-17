@@ -379,6 +379,21 @@ while(true)
                                                             //user registered and req other command
                                                             switch(mass_arr[2]) 
                                                             {
+                                                                case "уровень":
+                                                                case "Уровень":
+                                                                case "level":
+                                                                case "Level":
+                                                                var mass = "[&#128218;] Ваш уровень обучения составляет " + education_db_data.study_level + " " + fun.learning_points_tail(education_db_data.study_level) + ".";
+                                                                fun.VKReq(token,'messages.send',
+                                                                {
+                                                                    "forward_messages":event[1],
+                                                                    "peer_id":event[3],
+            
+                                                                    "message": mass
+                                                                });
+                                                                break;
+
+
                                                                 case "место":
                                                                 case "Mесто":
                                                                 case "plaсe":
@@ -499,29 +514,9 @@ while(true)
                                                                     });
                                                                 } else 
                                                                 {
-                                                                    if((education_db_data.last_lesson + conf.Day_length * 60) > fun.now())
+                                                                    if (education_db_data.school_course == 11 && education_db_data.count_of_lessons_now >= conf.Education.School.Count_Lesson_in_course)
                                                                     {
-                                                                        var wait_time = fun.timeparse((education_db_data.last_lesson + conf.Day_length * 60) - fun.now());
-                                                                        var str_tail = "";
-                                                                        if (wait_time.d.value > 0)
-                                                                        {
-                                                                            str_tail += " " + wait_time.d.value + " " + wait_time.d.string;
-                                                                        }
-                                                                        if (wait_time.h.value > 0)
-                                                                        {
-                                                                            str_tail += " " + wait_time.h.value + " " + wait_time.h.string;
-                                                                        }
-                                                                        if (wait_time.m.value > 0)
-                                                                        {
-                                                                            str_tail += " " + wait_time.m.value + " " + wait_time.m.string;
-                                                                        }
-                                                                        if (wait_time.s.value > 0)
-                                                                        {
-                                                                            str_tail += " " + wait_time.s.value + " " + wait_time.s.string;
-                                                                        }
-                                                                        var mass = "[&#9940;] Вы не можете пойти в школу прямо сейчас.\n" + 
-                                                                        "[&#8987;] До следующего занятия осталось:\n" + str_tail + ".";
-
+                                                                        var mass = "[&#128197;] Вы законили 11 классов и больше не можете учится в школе.";
                                                                         fun.VKReq(token,'messages.send',
                                                                         {
                                                                             "forward_messages":event[1],
@@ -529,44 +524,164 @@ while(true)
                     
                                                                             "message": mass
                                                                         });
-                                                                    } else 
+                                                                    } else
                                                                     {
-                                                                        var earnings = fun.random(conf.Education.School.Earned_point[0],conf.Education.School.Earned_point[1]);
-                                                                        var las_lesson = education_db_data.begin_course + conf.Day_length * 60 * Math.floor((fun.now() - education_db_data.begin_course) / (conf.Day_length * 60));
-                                                                        var count_lesson = Math.floor((fun.now() - education_db_data.begin_course) / (conf.Day_length * 60)) + 1;
-
-                                                                        db.connect('databases/vk.db');
-                                                                        db.run("UPDATE education SET study_level = ? WHERE id_user = ?;",[education_db_data.study_level + earnings,education_db_data.id_user]);
-                                                                        db.run("UPDATE education SET last_lesson = ? WHERE id_user = ?;",[las_lesson,education_db_data.id_user]);
-                                                                        db.run("UPDATE education SET count_of_classes_attended = ? WHERE id_user = ?;",[education_db_data.count_of_classes_attended + 1,education_db_data.id_user]);
-                                                                        db.run("UPDATE education SET count_of_lessons_now = ? WHERE id_user = ?;",[count_lesson,education_db_data.id_user]);
-                                                                        db.close();
-
-                                                                        var mass = "[&#10004;] Вы успешно проучились в школе!\n" +
-                                                                        "[&#128218;] Вы заработали " + earnings + " " + fun.learning_points_tail(earnings) + " обучения";
-                                                                        fun.VKReq(token,'messages.send',
+                                                                        if (education_db_data.count_of_lessons_now >= conf.Education.School.Count_Lesson_in_course)
                                                                         {
-                                                                            "forward_messages":event[1],
-                                                                            "peer_id":event[3],
-                    
-                                                                            "message": mass
-                                                                        });
+                                                                            var mass = "[&#10071;] Вы завершили ";
+
+                                                                            switch(education_db_data.school_course)
+                                                                            {
+                                                                                case 1:
+                                                                                mass = mass + "первый";
+                                                                                break;
+                                                                                case 2:
+                                                                                mass = mass + "второй";
+                                                                                break;
+                                                                                case 3:
+                                                                                mass = mass + "третий";
+                                                                                break;
+                                                                                case 4:
+                                                                                mass = mass + "четвёртый";
+                                                                                break;
+                                                                                case 5:
+                                                                                mass = mass + "пятый";
+                                                                                break;
+                                                                                case 6:
+                                                                                mass = mass + "шестой";
+                                                                                break;
+                                                                                case 7:
+                                                                                mass = mass + "седьмой";
+                                                                                break;
+                                                                                case 8:
+                                                                                mass = mass + "восьмой";
+                                                                                break;
+                                                                                case 9:
+                                                                                mass = mass + "девятый";
+                                                                                break;
+                                                                                case 10:
+                                                                                mass = mass + "десятый";
+                                                                                break;
+                                                                            }
+
+                                                                            mass += " класс.\n Для того чтоб продолжить обучение вам нужно перейти в следующий класс."
+
+                                                                            fun.VKReq(token,'messages.send',
+                                                                            {
+                                                                                "forward_messages":event[1],
+                                                                                "peer_id":event[3],
+                        
+                                                                                "message": mass
+                                                                            });
+                                                                        } else 
+                                                                        {
+                                                                            if((education_db_data.last_lesson + conf.Day_length * 60) > fun.now())
+                                                                            {
+                                                                                var wait_time = fun.timeparse((education_db_data.last_lesson + conf.Day_length * 60) - fun.now());
+                                                                                var str_tail = "";
+                                                                                if (wait_time.d.value > 0)
+                                                                                {
+                                                                                    str_tail += " " + wait_time.d.value + " " + wait_time.d.string;
+                                                                                }
+                                                                                if (wait_time.h.value > 0)
+                                                                                {
+                                                                                    str_tail += " " + wait_time.h.value + " " + wait_time.h.string;
+                                                                                }
+                                                                                if (wait_time.m.value > 0)
+                                                                                {
+                                                                                    str_tail += " " + wait_time.m.value + " " + wait_time.m.string;
+                                                                                }
+                                                                                if (wait_time.s.value > 0)
+                                                                                {
+                                                                                    str_tail += " " + wait_time.s.value + " " + wait_time.s.string;
+                                                                                }
+                                                                                var mass = "[&#9940;] Вы не можете пойти в школу прямо сейчас.\n" + 
+                                                                                "[&#8987;] До следующего занятия осталось:\n" + str_tail + ".";
+        
+                                                                                fun.VKReq(token,'messages.send',
+                                                                                {
+                                                                                    "forward_messages":event[1],
+                                                                                    "peer_id":event[3],
+                            
+                                                                                    "message": mass
+                                                                                });
+                                                                            } else 
+                                                                            {
+                                                                                var earnings = fun.random(conf.Education.School.Earned_point[0],conf.Education.School.Earned_point[1]);
+                                                                                var las_lesson = education_db_data.begin_course + conf.Day_length * 60 * Math.floor((fun.now() - education_db_data.begin_course) / (conf.Day_length * 60));
+                                                                                var count_lesson = Math.floor((fun.now() - education_db_data.begin_course) / (conf.Day_length * 60)) + 1;
+        
+                                                                                db.connect('databases/vk.db');
+                                                                                db.run("UPDATE education SET study_level = ? WHERE id_user = ?;",[education_db_data.study_level + earnings,education_db_data.id_user]);
+                                                                                db.run("UPDATE education SET last_lesson = ? WHERE id_user = ?;",[las_lesson,education_db_data.id_user]);
+                                                                                db.run("UPDATE education SET count_of_classes_attended = ? WHERE id_user = ?;",[education_db_data.count_of_classes_attended + 1,education_db_data.id_user]);
+                                                                                db.run("UPDATE education SET count_of_lessons_now = ? WHERE id_user = ?;",[count_lesson,education_db_data.id_user]);
+                                                                                db.close();
+        
+                                                                                var mass = "[&#10004;] Вы успешно проучились в школе!\n" +
+                                                                                "[&#128218;] Вы заработали " + earnings + " " + fun.learning_points_tail(earnings) + " обучения";
+                                                                                if (education_db_data.count_of_lessons_now + 1 == conf.Education.School.Count_Lesson_in_course)
+                                                                                { 
+                                                                                    if(education_db_data.school_course == 11) 
+                                                                                    {
+                                                                                        mass += "\n\n[&#10071;] Поздравляю... Вы окончили школу!!! (; ";
+                                                                                    } else 
+                                                                                    {
+                                                                                        mass += "\n\n [&#10071;] Вы окончили "
+                                                                                        switch(education_db_data.school_course)
+                                                                                        {
+                                                                                            case 1:
+                                                                                            mass = mass + "первый";
+                                                                                            break;
+                                                                                            case 2:
+                                                                                            mass = mass + "второй";
+                                                                                            break;
+                                                                                            case 3:
+                                                                                            mass = mass + "третий";
+                                                                                            break;
+                                                                                            case 4:
+                                                                                            mass = mass + "четвёртый";
+                                                                                            break;
+                                                                                            case 5:
+                                                                                            mass = mass + "пятый";
+                                                                                            break;
+                                                                                            case 6:
+                                                                                            mass = mass + "шестой";
+                                                                                            break;
+                                                                                            case 7:
+                                                                                            mass = mass + "седьмой";
+                                                                                            break;
+                                                                                            case 8:
+                                                                                            mass = mass + "восьмой";
+                                                                                            break;
+                                                                                            case 9:
+                                                                                            mass = mass + "девятый";
+                                                                                            break;
+                                                                                            case 10:
+                                                                                            mass = mass + "десятый";
+                                                                                            break;
+                                                                                        }
+                                                                                        mass += " класс."
+                                                                                    }
+                                                                                    
+                                                                                }
+                                                                                fun.VKReq(token,'messages.send',
+                                                                                {
+                                                                                    "forward_messages":event[1],
+                                                                                    "peer_id":event[3],
+                            
+                                                                                    "message": mass
+                                                                                });
+                                                                            }
+                                                                        }
                                                                     }
-                                                                    
                                                                 }
-                                                                
-                                                                
                                                                 break;
-
                                                             }
                                                         }
-
                                                         break;
                                                     }
                                                 }
-
-
-
                                                 break;
 
                                             }
